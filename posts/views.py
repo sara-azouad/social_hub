@@ -1,3 +1,22 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import login_required
+from .models import Post
+@login_required
+def feed(request):
+    posts = Post.objects.all().order_by('-created_at')
+    return render(request, 'connections/home.html', {'posts': posts})
+@login_required
+def create_post(request):
+    if request.method == "POST":
+        title = request.POST.get('title')
+        content = request.POST.get('content')
 
-# Create your views here.
+        Post.objects.create(
+            user=request.user,
+            title=title,
+            content=content
+        )
+
+        return redirect('/')  
+
+    return render(request, 'posts/create_post.html')

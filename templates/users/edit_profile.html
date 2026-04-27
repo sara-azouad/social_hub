@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h2>✏️ Edit Profile</h2>
+
+<form method="POST" enctype="multipart/form-data">
+  {% csrf_token %}
+
+  <label>Bio:</label>
+  <textarea name="bio" class="form-control" rows="4">
+    {{ profile.bio }}
+  </textarea>
+
+  <br>
+
+  <label>Profile Picture:</label>
+  <input type="file" name="profile_picture" class="form-control">
+
+  <br>
+
+  <button class="btn btn-success">Save Changes</button>
+</form>
+
+<br>
+
+<a href="{% url 'profile' %}">⬅ Back</a>
+
+{% endblock %}
