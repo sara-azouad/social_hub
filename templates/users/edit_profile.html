@@ -1,28 +1,71 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
+
+{% block title %}Edit Profile - SocialHub{% endblock %}
+
 {% block content %}
 
-<h2>✏️ Edit Profile</h2>
+<div class="container mt-4">
 
-<form method="POST" enctype="multipart/form-data">
-  {% csrf_token %}
+    <div class="card shadow-sm p-4"
+         style="max-width: 600px; margin:auto; border-radius: 12px;">
 
-  <label>Bio:</label>
-  <textarea name="bio" class="form-control" rows="4">
-    {{ profile.bio }}
-  </textarea>
+        <h3 class="mb-4">Edit Profile</h3>
 
-  <br>
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
 
-  <label>Profile Picture:</label>
-  <input type="file" name="profile_picture" class="form-control">
+            <!-- CURRENT PICTURE -->
+            <div class="text-center mb-3">
 
-  <br>
+                {% if profile.profile_picture %}
+                    <img src="{{ profile.profile_picture.url }}"
+                         style="width:120px;height:120px;border-radius:50%;
+                         object-fit:cover;border:3px solid #ddd;">
+                {% else %}
+                    <div class="avatar mx-auto"
+                         style="width:120px;height:120px;border-radius:50%;
+                         display:flex;align-items:center;justify-content:center;
+                         background:#6c5ce7;color:white;font-size:40px;">
+                        {{ profile.user.username|first|upper }}
+                    </div>
+                {% endif %}
 
-  <button class="btn btn-success">Save Changes</button>
-</form>
+            </div>
 
-<br>
+            <!-- BIO -->
+            <div class="mb-3">
+                <label class="form-label">Bio</label>
+                <textarea name="bio"
+                          class="form-control"
+                          rows="4"
+                          style="border-radius:10px;">{{ profile.bio }}</textarea>
+            </div>
 
-<a href="{% url 'profile' %}">⬅ Back</a>
+            <!-- PROFILE PICTURE -->
+            <div class="mb-3">
+                <label class="form-label">Change Profile Picture</label>
+                <input type="file"
+                       name="profile_picture"
+                       class="form-control"
+                       style="border-radius:10px;">
+            </div>
+
+            <!-- BUTTONS -->
+            <div class="d-flex gap-2">
+                <button class="btn btn-success px-4">
+                    Save Changes
+                </button>
+
+                <a href="{% url 'profile' profile.user.username %}"
+                   class="btn btn-outline-secondary">
+                    Cancel
+                </a>
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
 
 {% endblock %}

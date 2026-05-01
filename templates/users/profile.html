@@ -1,25 +1,125 @@
 {% extends "base.html" %}
-{% block title %}Profile{% endblock %}
+
+{% block title %}Profile - SocialHub{% endblock %}
 
 {% block content %}
 
-<div class="container mt-4">
+<!-- PROFILE HEADER -->
+<div class="card shadow-sm mb-4"
+     style="border-radius: 12px; border: none;
+     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
 
-```
-<div class="bg-white p-4 rounded text-center">
+    <div class="card-body p-5 text-white">
 
-    <div class="rounded-circle bg-primary text-white d-flex justify-content-center align-items-center mx-auto"
-         style="width:80px;height:80px;font-size:30px;">
-        Y
+        <div class="row align-items-center">
+
+            <!-- PROFILE PICTURE (LEFT) -->
+            <div class="col-md-3 text-start ps-0">
+                <div style="position: relative; display: inline-block; margin-left: -10px;">
+
+                    {% if profile.profile_picture %}
+                        <img src="{{ profile.profile_picture.url }}"
+                             style="width:150px;height:150px;border-radius:50%;
+                             border:5px solid white;object-fit:cover;">
+                    {% else %}
+                        <div class="avatar"
+                             style="width:150px;height:150px;border:5px solid white;
+                             font-size:60px; display:flex; align-items:center;
+                             justify-content:center;">
+                            {{ profile_user.username|first|upper }}
+                        </div>
+                    {% endif %}
+
+                    <!-- optional camera button (you can link it later) -->
+                    {% if request.user == profile_user %}
+                    <button class="btn btn-light btn-sm"
+                            style="position:absolute;bottom:0;right:0;
+                            border-radius:50%;width:45px;height:45px;">
+                        <i class="fas fa-camera"></i>
+                    </button>
+                    {% endif %}
+
+                </div>
+            </div>
+
+            <!-- PROFILE INFO -->
+            <div class="col-md-9">
+
+                <h2 class="fw-bold mb-2">
+                    {{ profile_user.username }}
+                </h2>
+
+                <p class="mb-3" style="opacity:0.9;">
+                    {{ profile.bio|default:"No bio yet..." }}
+                </p>
+
+                <!-- STATS -->
+                <div class="d-flex gap-4 mb-3">
+                    <div><strong>{{ posts|length }}</strong> Posts</div>
+                    <div><strong>{{ profile.followers.count }}</strong> Followers</div>
+                    <div><strong>{{ profile_user.following.count }}</strong> Following</div>
+                </div>
+
+                <!-- ACTION BUTTONS -->
+                <div class="d-flex gap-2">
+                    {% if request.user == profile_user %}
+
+                        <!-- ✅ FIXED: REAL PAGE LINK -->
+                        <a href="{% url 'edit_profile' %}" class="btn btn-light">
+                            Edit Profile
+                        </a>
+
+                    {% else %}
+                        <button class="btn btn-light">
+                            Follow
+                        </button>
+                        <button class="btn btn-outline-light">
+                            Message
+                        </button>
+                    {% endif %}
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- POSTS -->
+<div class="container">
+
+    {% for post in posts %}
+    <div class="card mb-3 shadow-sm">
+
+        <div class="card-body d-flex justify-content-between align-items-center">
+
+            <div class="d-flex gap-2 align-items-center">
+                <div class="avatar">
+                    {{ profile_user.username|first|upper }}
+                </div>
+
+                <div>
+                    <strong>{{ profile_user.username }}</strong><br>
+                    <small class="text-muted">{{ post.created_at }}</small>
+                </div>
+            </div>
+
+        </div>
+
+        {% if post.image %}
+        <img src="{{ post.image.url }}"
+             class="w-100"
+             style="max-height:400px; object-fit:cover;">
+        {% endif %}
+
+        <div class="card-body pt-2">
+            <p class="mb-0">{{ post.content }}</p>
+        </div>
+
     </div>
 
-    <h4 class="mt-2">Your Name</h4>
-    <p>Bio goes here...</p>
-
-    <button class="btn btn-outline-primary">Edit Profile</button>
-
-</div>
-```
+    {% empty %}
+        <p class="text-center text-muted">No posts yet.</p>
+    {% endfor %}
 
 </div>
 

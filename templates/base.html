@@ -180,11 +180,13 @@
 
 <!-- SIDEBAR -->
 <div class="sidebar">
-    <a href="#"><i class="fas fa-house"></i> Home</a>
+    <a href="{% url 'home' %}">
+    <i class="fas fa-house"></i> Home
+</a>
+<a href="{% url 'profile' request.user.username %}">
+    <i class="fas fa-user"></i> Profile
+</a>
 
-    <a href="#">
-        <i class="fas fa-user"></i> Profile
-    </a>
 
     <a href="#">
         <i class="fas fa-bell"></i> Notifications
@@ -221,7 +223,27 @@
         </div>
         <button class="btn btn-sm btn-primary">Follow</button>
     </div>
-
+<div class="suggest-user">
+    <div class="d-flex gap-2 align-items-center">
+        <div class="avatar">A</div>
+        <strong>Amine</strong>
+    </div>
+    <button class="btn btn-sm btn-primary">Follow</button>
+</div>
+<div class="suggest-user">
+    <div class="d-flex gap-2 align-items-center">
+        <div class="avatar">Y</div>
+        <strong>Yasmine</strong>
+    </div>
+    <button class="btn btn-sm btn-primary">Follow</button>
+</div>
+<div class="suggest-user">
+    <div class="d-flex gap-2 align-items-center">
+        <div class="avatar">O</div>
+        <strong>Omar</strong>
+    </div>
+    <button class="btn btn-sm btn-primary">Follow</button>
+</div>
     <div class="suggest-user">
         <div class="d-flex gap-2 align-items-center">
             <div class="avatar">L</div>
