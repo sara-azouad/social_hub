@@ -1,107 +1,227 @@
 {% load static %}
-<!doctype html>
-<html>
-  <head>
-    <title>MySocial</title>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-    />
+<title>SocialHub - Login</title>
 
-    <link rel="stylesheet" href="{% static 'css/style.css' %}" />
-  </head>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
 
-  <body class="bg-light">
-    <div class="container-fluid vh-100">
-      <div class="row h-100">
-       
-        <div
-          class="col-md-6 d-flex flex-column justify-content-center align-items-center text-white"
-          style="background: linear-gradient(135deg, #4a90e2, #145dbf)"
-        >
-          <h1 class="display-3 fw-bold">MySocial</h1>
-          <p class="fs-5">Share moments with friends</p>
-        </div>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 
-        
-        <div class="col-md-6 d-flex justify-content-center align-items-center">
-          
-          <div id="login-box" class="card shadow p-4" style="width: 350px">
-            <h3 class="text-center mb-3">Login</h3>
+<style>
 
-            <form method="POST" action="{% url 'login' %}">
-              {% csrf_token %}
+body {
+    font-family: 'Inter', sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
 
-              <input
-                type="text"
-                name="username"
-                class="form-control mb-2"
-                placeholder="Username"
-              />
-              <input
-                type="password"
-                name="password"
-                class="form-control mb-3"
-                placeholder="Password"
-              />
+.login-container {
+    width: 100%;
+    max-width: 1000px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    background: white;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.15);
+}
 
-              <button class="btn btn-primary w-100">Login</button>
-            </form>
+.brand-section {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    padding: 60px 40px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
 
-            <p class="text-center mt-3">
-              Don't have an account?
-              <a href="#" onclick="showRegister()">Register</a>
-            </p>
-          </div>
+.brand-logo {
+    font-size: 42px;
+    font-weight: 700;
+}
 
-          
-          <div
-            id="register-box"
-            class="card shadow p-4"
-            style="width: 350px; display: none"
-          >
-            <h3 class="text-center mb-3">Register</h3>
+.brand-section h2 {
+    font-size: 26px;
+    font-weight: 700;
+    margin-top: 20px;
+}
 
-            <form method="POST" action="{% url 'register' %}">
-              {% csrf_token %}
+.feature-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 15px;
+}
 
-              <input
-                type="text"
-                name="username"
-                class="form-control mb-2"
-                placeholder="Username"
-              />
-              <input
-                type="password"
-                name="password"
-                class="form-control mb-3"
-                placeholder="Password"
-              />
+.feature-icon {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
 
-              <button class="btn btn-success w-100">Sign up</button>
-            </form>
+.form-section {
+    padding: 60px 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
 
-            <p class="text-center mt-3">
-              Already have an account?
-              <a href="#" onclick="showLogin()">Login</a>
-            </p>
-          </div>
-        </div>
-      </div>
+.form-header h1 {
+    font-size: 28px;
+    font-weight: 700;
+}
+
+.form-control {
+    height: 44px;
+    border-radius: 10px;
+    border: 1px solid #e5e5e5;
+}
+
+.form-control:focus {
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102,126,234,0.15);
+}
+
+.btn-login {
+    height: 44px;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    border: none;
+    border-radius: 10px;
+    color: white;
+    font-weight: 600;
+}
+
+.btn-login:hover {
+    transform: translateY(-2px);
+}
+
+/* small fix */
+.auth-link {
+    cursor: pointer;
+    color: #667eea;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="login-container">
+
+<!-- LEFT -->
+<div class="brand-section">
+
+    <div class="brand-logo">
+        <i class="fas fa-globe"></i> SocialHub
     </div>
 
-    <script>
-      function showRegister() {
-        document.getElementById("login-box").style.display = "none";
-        document.getElementById("register-box").style.display = "block";
-      }
+    <h2>Connect with the World</h2>
 
-      function showLogin() {
-        document.getElementById("register-box").style.display = "none";
-        document.getElementById("login-box").style.display = "block";
-      }
-    </script>
-  </body>
+    <div class="feature-item">
+        <div class="feature-icon"><i class="fas fa-users"></i></div>
+        Meet new friends
+    </div>
+
+    <div class="feature-item">
+        <div class="feature-icon"><i class="fas fa-image"></i></div>
+        Share moments
+    </div>
+
+    <div class="feature-item">
+        <div class="feature-icon"><i class="fas fa-heart"></i></div>
+        Build connections
+    </div>
+
+</div>
+
+<!-- RIGHT -->
+<div class="form-section">
+
+<!-- ================= LOGIN ================= -->
+<div id="login-box">
+
+    <div class="form-header mb-4">
+        <h1>Welcome Back</h1>
+        <p class="text-muted">Login to continue</p>
+    </div>
+
+    <form method="POST" action="{% url 'login' %}">
+        {% csrf_token %}
+
+        <input type="text" name="username" class="form-control mb-3" placeholder="Username">
+
+        <input type="password" name="password" class="form-control mb-3" placeholder="Password">
+
+        <button class="btn btn-login w-100">Login</button>
+    </form>
+
+    <div class="text-center mt-3">
+        <small>
+            Don't have an account?
+            <span class="auth-link" onclick="showRegister()">Register</span>
+        </small>
+    </div>
+
+</div>
+
+<!-- ================= REGISTER ================= -->
+<div id="register-box" style="display:none;">
+
+    <div class="form-header mb-4">
+        <h1>Create Account</h1>
+        <p class="text-muted">Sign up to start sharing</p>
+    </div>
+
+    <form method="POST" action="{% url 'register' %}">
+        {% csrf_token %}
+
+        <input type="text" name="username" class="form-control mb-3" placeholder="Username">
+
+        <input type="password" name="password" class="form-control mb-3" placeholder="Password">
+
+        <input type="password" name="confirm_password" class="form-control mb-3" placeholder="Confirm Password">
+
+        <button class="btn btn-login w-100">Register</button>
+    </form>
+
+    <div class="text-center mt-3">
+        <small>
+            Already have an account?
+            <span class="auth-link" onclick="showLogin()">Login</span>
+        </small>
+    </div>
+
+</div>
+
+</div>
+
+</div>
+
+<script>
+function showRegister() {
+    document.getElementById("login-box").style.display = "none";
+    document.getElementById("register-box").style.display = "block";
+}
+
+function showLogin() {
+    document.getElementById("register-box").style.display = "none";
+    document.getElementById("login-box").style.display = "block";
+}
+</script>
+
+</body>
 </html>

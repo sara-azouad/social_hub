@@ -1,22 +1,26 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
+{% block title %}Profile{% endblock %}
+
 {% block content %}
 
-<h2>👤 Profile</h2>
+<div class="container mt-4">
 
-<div class="card">
-  <h3>{{ user.username }}</h3>
-  <p>Bio: {{ profile.bio }}</p>
+```
+<div class="bg-white p-4 rounded text-center">
+
+    <div class="rounded-circle bg-primary text-white d-flex justify-content-center align-items-center mx-auto"
+         style="width:80px;height:80px;font-size:30px;">
+        Y
+    </div>
+
+    <h4 class="mt-2">Your Name</h4>
+    <p>Bio goes here...</p>
+
+    <button class="btn btn-outline-primary">Edit Profile</button>
+
 </div>
+```
 
-<h3>Your Posts</h3>
-
-{% for post in posts %}
-<div class="card">
-  <p>{{ post.content }}</p>
 </div>
-{% endfor %}
-
-<a href="/posts/create/">Create Post</a>
-<a href="/users/logout/">Logout</a>
 
 {% endblock %}

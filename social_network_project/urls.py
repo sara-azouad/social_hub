@@ -18,6 +18,8 @@ from django.contrib import admin
 from django.urls import path, include
 from django.shortcuts import redirect
 from posts.views import feed   
+from django.contrib.auth import views as auth_views
+from django.urls import path
 
 
 def home_redirect(request):
@@ -30,6 +32,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('users/', include('users.urls')),
     path('posts/', include('posts.urls')),
-    path('', include('connections.urls')),
+    path('connections/', include('connections.urls')),
+    path('logout/', auth_views.LogoutView.as_view(), name='logout'),
     
 ]

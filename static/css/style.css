@@ -1,16 +1,108 @@
-.auth-box {
-  background: white;
-  padding: 40px;
-  width: 350px;
-  border-radius: 12px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
-  text-align: center;
+/* =========================
+   GLOBAL THEME (MATCH LOGIN)
+========================= */
+
+body {
+    font-family: 'Inter', sans-serif;
+    background: #f4f6fb;
 }
 
-.input-field {
-  width: 100%;
-  padding: 12px;
-  margin-bottom: 12px;
-  border: 1px solid #ddd;
-  border-radius: 8px;
+/* =========================
+   SIDEBAR (PURPLE STYLE)
+========================= */
+
+.col-md-2 {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}
+
+.col-md-2 h4 {
+    font-weight: 700;
+    margin-bottom: 30px;
+}
+
+.col-md-2 a {
+    display: block;
+    padding: 10px;
+    margin-bottom: 8px;
+    border-radius: 10px;
+    color: white;
+    text-decoration: none;
+    transition: 0.3s;
+}
+
+.col-md-2 a:hover {
+    background: rgba(255,255,255,0.2);
+}
+
+/* =========================
+   CENTER AREA
+========================= */
+
+.col-md-7 {
+    background: #f4f6fb;
+}
+
+/* =========================
+   RIGHT PANEL
+========================= */
+
+.col-md-3 {
+    background: white;
+}
+
+/* =========================
+   CARDS (IMPORTANT)
+========================= */
+
+.card {
+    border: none;
+    border-radius: 14px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+    transition: 0.3s;
+    background: white;
+}
+
+.card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 30px rgba(102,126,234,0.2);
+}
+
+/* =========================
+   BUTTONS (MATCH LOGIN)
+========================= */
+
+.btn-primary {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    border: none;
+    border-radius: 10px;
+    font-weight: 600;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(102,126,234,0.3);
+}
+
+/* =========================
+   INPUTS
+========================= */
+
+.form-control {
+    border-radius: 10px;
+    border: 1px solid #e5e5e5;
+    padding: 10px;
+}
+
+.form-control:focus {
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102,126,234,0.15);
+}
+
+/* =========================
+   PROFILE TEXT
+========================= */
+
+h2, h3, h4, h5 {
+    font-weight: 700;
 }
