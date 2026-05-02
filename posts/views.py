@@ -1,8 +1,33 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
-from .models import Post
+from .models import Post,Report
 from django.contrib.auth.models import User
 from .models import Post, Comment
+from django.contrib import messages
+@login_required
+def report_post(request, post_id):
+    post = get_object_or_404(Post, id=post_id)
+
+    # check duplicate
+    if Report.objects.filter(user=request.user, post=post).exists():
+        messages.warning(request, "You already reported this post.")
+        return redirect(request.META.get('HTTP_REFERER', '/'))
+
+    # create report record
+    Report.objects.create(user=request.user, post=post)
+
+    # IMPORTANT: update counter
+    post.report_count += 1
+    post.save()
+
+    # flag logic
+    if post.report_count >= 3:
+        post.is_flagged = True
+        post.save()
+
+    messages.success(request, "Post reported!")
+
+    return redirect(request.META.get('HTTP_REFERER', '/'))
 
 @login_required
 def add_comment(request, post_id):

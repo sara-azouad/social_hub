@@ -7,3 +7,4 @@ def home(request):
     return render(request, 'connections/home.html', {
         'posts': posts
     })
+    
