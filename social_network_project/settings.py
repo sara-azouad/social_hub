@@ -38,7 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'users',
-'posts',
+ 'posts.apps.PostsConfig',
 'connections',
 'notifications',
 ]
@@ -125,3 +125,4 @@ LOGIN_REDIRECT_URL = '/posts/'
 LOGOUT_REDIRECT_URL = '/users/login/'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'

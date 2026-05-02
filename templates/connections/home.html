@@ -1,67 +1,107 @@
-{% extends "base.html" %}
+{% extends "base.html" %} {% block content %}
 
-{% block content %}
-
-<!-- CREATE POST BOX -->
+<!-- CREATE POST -->
 <div class="card shadow-sm mb-4 p-3">
-    <input type="text" class="form-control mb-2" placeholder="What's on your mind?">
-    <button class="btn btn-primary">Post</button>
+  <form
+    method="POST"
+    action="{% url 'create_post' %}"
+    enctype="multipart/form-data"
+  >
+    {% csrf_token %}
+
+    <textarea
+      name="content"
+      class="form-control mb-2"
+      placeholder="Write your post..."
+      required
+    ></textarea>
+
+    <input type="file" name="image" class="form-control mb-2" />
+
+    <button type="submit" class="btn btn-primary">Create a Post</button>
+  </form>
 </div>
 
-<!-- POST 1 -->
-<div class="card post-card shadow-sm mb-4">
+<!-- POSTS -->
+{% for post in posts %}
 
-    <div class="card-body d-flex justify-content-between align-items-center">
-        <div class="d-flex gap-2 align-items-center">
-            <div class="avatar">A</div>
-            <div>
-                <h6 class="mb-0">Alex Martin</h6>
-                <small class="text-muted">2 hours ago</small>
-            </div>
-        </div>
+<div class="card shadow-sm mb-4">
+  <!-- HEADER -->
+  <div class="card-body d-flex justify-content-between align-items-center">
+    <div class="d-flex gap-2 align-items-center">
+      <div class="avatar">{{ post.user.username|first|upper }}</div>
 
-        <i class="fas fa-ellipsis-h text-muted"></i>
+      <div>
+        <h6 class="mb-0">{{ post.user.username }}</h6>
+        <small class="text-muted">{{ post.created_at }}</small>
+      </div>
     </div>
+  </div>
 
-    <img src="https://picsum.photos/800/400" class="post-img w-100">
+  <!-- IMAGE -->
+  {% if post.image %}
+  <img src="{{ post.image.url }}" class="w-100" />
+  {% endif %}
 
-    <div class="card-body">
-        <p>Beautiful day exploring new places 🌍✨</p>
+  <!-- CONTENT -->
+  <div class="card-body">
+    <p>{{ post.content }}</p>
+  </div>
+
+  <!-- ACTIONS -->
+  <div
+    class="card-footer bg-white d-flex justify-content-around align-items-center"
+  >
+    <!-- LIKE -->
+    <a href="{% url 'like_post' post.id %}" class="text-decoration-none">
+      {% if user in post.likes.all %} ❤️ Unlike {% else %} 🤍 Like {% endif %}
+      ({{ post.total_likes }})
+    </a>
+
+    <span>💬 {{ post.comments.count }}</span>
+
+    <!-- DELETE -->
+    {% if user == post.user %}
+    <a
+      href="{% url 'delete_post' post.id %}"
+      class="text-danger text-decoration-none"
+      onclick="return confirm('Delete this post?');"
+    >
+      🗑️ Delete
+    </a>
+    {% endif %}
+  </div>
+
+  <!-- COMMENTS SECTION -->
+  <div class="p-3">
+    <!-- SHOW COMMENTS -->
+    {% for comment in post.comments.all %}
+    <div class="mb-2">
+      <strong>{{ comment.user.username }}</strong>
+      <span>{{ comment.text }}</span>
+      <small class="text-muted">({{ comment.created_at }})</small>
     </div>
+    {% endfor %}
 
-    <div class="card-footer bg-white d-flex justify-content-around">
-        <button class="icon-btn"><i class="far fa-heart"></i> Like</button>
-        <button class="icon-btn"><i class="far fa-comment"></i> Comment</button>
-        <button class="icon-btn"><i class="far fa-share-square"></i> Share</button>
-    </div>
+    <!-- ADD COMMENT -->
+    <form method="POST" action="{% url 'add_comment' post.id %}">
+      {% csrf_token %}
 
+      <input
+        type="text"
+        name="text"
+        class="form-control form-control-sm mt-2"
+        placeholder="Write a comment..."
+        required
+      />
+
+      <button class="btn btn-sm btn-primary mt-2">Comment</button>
+    </form>
+  </div>
 </div>
 
-<!-- POST 2 -->
-<div class="card post-card shadow-sm mb-4">
+{% empty %}
 
-    <div class="card-body d-flex justify-content-between align-items-center">
-        <div class="d-flex gap-2 align-items-center">
-            <div class="avatar">M</div>
-            <div>
-                <h6 class="mb-0">Maya</h6>
-                <small class="text-muted">5 hours ago</small>
-            </div>
-        </div>
+<p class="text-center text-muted">No posts yet 🚀</p>
 
-        <i class="fas fa-ellipsis-h text-muted"></i>
-    </div>
-
-    <div class="card-body">
-        <p>Working on my new project 🚀</p>
-    </div>
-
-    <div class="card-footer bg-white d-flex justify-content-around">
-        <button class="icon-btn"><i class="far fa-heart"></i> Like</button>
-        <button class="icon-btn"><i class="far fa-comment"></i> Comment</button>
-        <button class="icon-btn"><i class="far fa-share-square"></i> Share</button>
-    </div>
-
-</div>
-
-{% endblock %}
+{% endfor %} {% endblock %}

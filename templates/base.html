@@ -1,258 +1,258 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <title>{% block title %}SocialHub{% endblock %}</title>
 
     <!-- Bootstrap + Icons -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+      rel="stylesheet"
+    />
 
     <style>
-        body {
-            background: #f5f6f8;
-        }
+      body {
+        background: #f5f6f8;
+      }
 
-        /* TOP BAR */
-        .topbar {
-            height: 60px;
-            background: white;
-            border-bottom: 1px solid #eee;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 1000;
-            display: flex;
-            align-items: center;
-            padding: 0 20px;
-        }
+      /* TOP BAR */
+      .topbar {
+        height: 60px;
+        background: white;
+        border-bottom: 1px solid #eee;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 1000;
+        display: flex;
+        align-items: center;
+        padding: 0 20px;
+      }
 
-        .logo {
-            font-weight: 700;
-            color: #4f46e5;
-            font-size: 20px;
-        }
+      .logo {
+        font-weight: 700;
+        color: #4f46e5;
+        font-size: 20px;
+      }
 
-        .top-icons {
-            margin-left: auto;
-            display: flex;
-            gap: 22px;
-            font-size: 18px;
-            color: #555;
-        }
+      .top-icons {
+        margin-left: auto;
+        display: flex;
+        gap: 22px;
+        font-size: 18px;
+        color: #555;
+      }
 
-        .top-icons i:hover {
-            color: #4f46e5;
-            cursor: pointer;
-        }
+      .top-icons i:hover {
+        color: #4f46e5;
+        cursor: pointer;
+      }
 
-        /* SIDEBAR */
-        .sidebar {
-            width: 240px;
-            position: fixed;
-            top: 60px;
-            left: 0;
-            height: 100vh;
-            background: white;
-            border-right: 1px solid #eee;
-            padding: 15px;
-        }
+      /* SIDEBAR */
+      .sidebar {
+        width: 240px;
+        position: fixed;
+        top: 60px;
+        left: 0;
+        height: 100vh;
+        background: white;
+        border-right: 1px solid #eee;
+        padding: 15px;
+      }
 
-        .sidebar a {
-            display: flex;
-            gap: 10px;
-            padding: 10px;
-            border-radius: 10px;
-            text-decoration: none;
-            color: #333;
-            margin-bottom: 5px;
-        }
+      .sidebar a {
+        display: flex;
+        gap: 10px;
+        padding: 10px;
+        border-radius: 10px;
+        text-decoration: none;
+        color: #333;
+        margin-bottom: 5px;
+      }
 
-        .sidebar a:hover {
-            background: #f3f4f6;
-            color: #4f46e5;
-        }
+      .sidebar a:hover {
+        background: #f3f4f6;
+        color: #4f46e5;
+      }
 
-        /* MAIN CONTENT */
-        .main-content {
-            margin-top: 80px;
-            margin-left: 260px;
-            margin-right: 260px;
-            max-width: 650px;
-        }
+      /* MAIN CONTENT */
+      .main-content {
+        margin-top: 80px;
+        margin-left: 260px;
+        margin-right: 260px;
+        max-width: 650px;
+      }
 
-        /* POSTS */
-        .post-card {
-            border: none;
-            border-radius: 12px;
-        }
+      /* POSTS */
+      .post-card {
+        border: none;
+        border-radius: 12px;
+      }
 
-        .avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-        }
+      .avatar {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+      }
 
-        .post-img {
-            height: 300px;
-            object-fit: cover;
-        }
+      .post-img {
+        height: 300px;
+        object-fit: cover;
+      }
 
-        .icon-btn {
-            border: none;
-            background: none;
-            color: #555;
-            font-size: 14px;
-        }
+      .icon-btn {
+        border: none;
+        background: none;
+        color: #555;
+        font-size: 14px;
+      }
 
-        .icon-btn:hover {
-            color: #4f46e5;
-        }
+      .icon-btn:hover {
+        color: #4f46e5;
+      }
 
-        /* RIGHT BAR */
+      /* RIGHT BAR */
+      .rightbar {
+        width: 250px;
+        position: fixed;
+        top: 60px;
+        right: 0;
+        height: 100vh;
+        background: white;
+        border-left: 1px solid #eee;
+        padding: 15px;
+      }
+
+      .suggest-user {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 12px;
+      }
+
+      /* ONLY NEW THING: logout style (minimal) */
+      .logout-link {
+        display: flex;
+        gap: 10px;
+        padding: 10px;
+        border-radius: 10px;
+        text-decoration: none;
+        color: #dc3545;
+      }
+
+      .logout-link:hover {
+        background: #f8d7da;
+      }
+
+      @media (max-width: 992px) {
+        .sidebar,
         .rightbar {
-            width: 250px;
-            position: fixed;
-            top: 60px;
-            right: 0;
-            height: 100vh;
-            background: white;
-            border-left: 1px solid #eee;
-            padding: 15px;
+          display: none;
         }
 
-        .suggest-user {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 12px;
+        .main-content {
+          margin: 80px auto;
+          padding: 0 10px;
         }
-
-        /* ONLY NEW THING: logout style (minimal) */
-        .logout-link {
-            display: flex;
-            gap: 10px;
-            padding: 10px;
-            border-radius: 10px;
-            text-decoration: none;
-            color: #dc3545;
-        }
-
-        .logout-link:hover {
-            background: #f8d7da;
-        }
-
-        @media (max-width: 992px) {
-            .sidebar, .rightbar {
-                display: none;
-            }
-
-            .main-content {
-                margin: 80px auto;
-                padding: 0 10px;
-            }
-        }
+      }
     </style>
-</head>
+  </head>
 
-<body>
+  <body>
+    <!-- TOP BAR -->
+    <div class="topbar">
+      <div class="logo">SocialHub</div>
 
-<!-- TOP BAR -->
-<div class="topbar">
-    <div class="logo">SocialHub</div>
-
-    <div class="top-icons">
+      <div class="top-icons">
         <i class="fas fa-home"></i>
         <i class="fas fa-bell"></i>
         <i class="fas fa-envelope"></i>
         <i class="fas fa-user-circle"></i>
+      </div>
     </div>
-</div>
 
-<!-- SIDEBAR -->
-<div class="sidebar">
-    <a href="{% url 'home' %}">
-    <i class="fas fa-house"></i> Home
-</a>
-<a href="{% url 'profile' request.user.username %}">
-    <i class="fas fa-user"></i> Profile
-</a>
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+      <a href="{% url 'home' %}"> <i class="fas fa-house"></i> Home </a>
+      <a href="{% url 'profile' request.user.username %}">
+        <i class="fas fa-user"></i> Profile
+      </a>
 
+      <a href="#"> <i class="fas fa-bell"></i> Notifications </a>
 
-    <a href="#">
-        <i class="fas fa-bell"></i> Notifications
-    </a>
+      <a href="#"> <i class="fas fa-message"></i> Messages </a>
 
-    <a href="#">
-        <i class="fas fa-message"></i> Messages
-    </a>
-
-    <!-- LOGOUT FIX (only functional change) -->
-    <form method="POST" action="{% url 'logout' %}">
+      <!-- LOGOUT FIX (only functional change) -->
+      <form method="POST" action="{% url 'logout' %}">
         {% csrf_token %}
-        <a href="#" class="logout-link"
-           onclick="this.closest('form').submit(); return false;">
-            <i class="fas fa-right-from-bracket"></i> Logout
+        <a
+          href="#"
+          class="logout-link"
+          onclick="
+            this.closest('form').submit();
+            return false;
+          "
+        >
+          <i class="fas fa-right-from-bracket"></i> Logout
         </a>
-    </form>
-</div>
+      </form>
+    </div>
 
-<!-- MAIN CONTENT -->
-<div class="main-content">
-    {% block content %}{% endblock %}
-</div>
+    <!-- MAIN CONTENT -->
+    <div class="main-content">{% block content %}{% endblock %}</div>
 
-<!-- RIGHT BAR -->
-<div class="rightbar">
+    <!-- RIGHT BAR -->
+    <div class="rightbar">
+      <h6 class="fw-bold">Suggestions</h6>
 
-    <h6 class="fw-bold">Suggestions</h6>
-
-    <div class="suggest-user">
+      <div class="suggest-user">
         <div class="d-flex gap-2 align-items-center">
-            <div class="avatar">S</div>
-            <strong>Sara</strong>
+          <div class="avatar">S</div>
+          <strong>Sara</strong>
         </div>
         <button class="btn btn-sm btn-primary">Follow</button>
-    </div>
-<div class="suggest-user">
-    <div class="d-flex gap-2 align-items-center">
-        <div class="avatar">A</div>
-        <strong>Amine</strong>
-    </div>
-    <button class="btn btn-sm btn-primary">Follow</button>
-</div>
-<div class="suggest-user">
-    <div class="d-flex gap-2 align-items-center">
-        <div class="avatar">Y</div>
-        <strong>Yasmine</strong>
-    </div>
-    <button class="btn btn-sm btn-primary">Follow</button>
-</div>
-<div class="suggest-user">
-    <div class="d-flex gap-2 align-items-center">
-        <div class="avatar">O</div>
-        <strong>Omar</strong>
-    </div>
-    <button class="btn btn-sm btn-primary">Follow</button>
-</div>
-    <div class="suggest-user">
+      </div>
+      <div class="suggest-user">
         <div class="d-flex gap-2 align-items-center">
-            <div class="avatar">L</div>
-            <strong>Leo</strong>
+          <div class="avatar">A</div>
+          <strong>Amine</strong>
         </div>
         <button class="btn btn-sm btn-primary">Follow</button>
+      </div>
+      <div class="suggest-user">
+        <div class="d-flex gap-2 align-items-center">
+          <div class="avatar">Y</div>
+          <strong>Yasmine</strong>
+        </div>
+        <button class="btn btn-sm btn-primary">Follow</button>
+      </div>
+      <div class="suggest-user">
+        <div class="d-flex gap-2 align-items-center">
+          <div class="avatar">O</div>
+          <strong>Omar</strong>
+        </div>
+        <button class="btn btn-sm btn-primary">Follow</button>
+      </div>
+      <div class="suggest-user">
+        <div class="d-flex gap-2 align-items-center">
+          <div class="avatar">L</div>
+          <strong>Leo</strong>
+        </div>
+        <button class="btn btn-sm btn-primary">Follow</button>
+      </div>
     </div>
-
-</div>
-
-</body>
+  </body>
 </html>

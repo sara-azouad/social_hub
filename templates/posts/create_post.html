@@ -1,28 +1,21 @@
-{% extends "base.html" %}
-{% block title %}Create Post{% endblock %}
+{% extends "base.html" %} {% block content %}
 
-{% block content %}
+<div class="card shadow-sm p-3">
+  <h4>Create a Post</h4>
 
-<div class="container mt-4">
+  <form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
 
-```
-<div class="bg-white p-4 rounded">
+    <textarea
+      name="content"
+      class="form-control mb-2"
+      placeholder="Write something..."
+    ></textarea>
 
-    <h4>Create Post</h4>
+    <input type="file" name="image" class="form-control mb-2" />
 
-    <form method="POST" enctype="multipart/form-data">
-        {% csrf_token %}
-
-        <textarea class="form-control" placeholder="Write something..."></textarea>
-
-        <input type="file" class="form-control mt-2">
-
-        <button class="btn btn-primary mt-3">Publish</button>
-    </form>
-
-</div>
-```
-
+    <button type="submit" class="btn btn-primary">Post</button>
+  </form>
 </div>
 
 {% endblock %}

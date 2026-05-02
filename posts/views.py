@@ -1,31 +1,78 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from .models import Post
+from django.contrib.auth.models import User
+from .models import Post, Comment
+
+@login_required
+def add_comment(request, post_id):
+    post = get_object_or_404(Post, id=post_id)
+
+    if request.method == "POST":
+        text = request.POST.get('text')
+        if text:
+            Comment.objects.create(
+                post=post,
+                user=request.user,
+                text=text
+            )
+
+    return redirect(request.META.get('HTTP_REFERER', 'home'))
+@login_required
+def delete_post(request, post_id):
+    post = get_object_or_404(Post, id=post_id)
+
+    if request.user == post.user:
+        post.delete()
+
+    return redirect(request.META.get('HTTP_REFERER', 'home'))
+@login_required
+def like_post(request, post_id):
+    post = get_object_or_404(Post, id=post_id)
+
+    if request.user in post.likes.all():
+        post.likes.remove(request.user)   # unlike
+    else:
+        post.likes.add(request.user)      # like
+
+    return redirect(request.META.get('HTTP_REFERER', 'home'))
+
+# HOME PAGE (ALL POSTS)
 def home(request):
-    return render(request, 'connections/home.html')
+    posts = Post.objects.all().order_by('-created_at')
+    return render(request, "home.html", {"posts": posts})
+
+
+# FEED (same as home but protected)
 @login_required
 def feed(request):
     posts = Post.objects.all().order_by('-created_at')
     return render(request, 'connections/home.html', {'posts': posts})
+
+
+# CREATE POST
 @login_required
 def create_post(request):
     if request.method == "POST":
-        title = request.POST.get('title')
-        content = request.POST.get('content')
+        content = request.POST.get("content")
 
-        Post.objects.create(
-            user=request.user,
-            title=title,
-            content=content
-        )
+        image = request.FILES.get("image")
 
-        return redirect('/')  
+        if content or image:
+            Post.objects.create(
+                user=request.user,
+                content=content,
+                image=image
+            )
+
+        return redirect('home')
 
     return render(request, 'posts/create_post.html')
+
+
+# PROFILE
 @login_required
 def profile_view(request, username):
-    from django.contrib.auth.models import User
-
     user = get_object_or_404(User, username=username)
     profile = user.userprofile
 

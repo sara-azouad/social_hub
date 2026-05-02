@@ -4,7 +4,7 @@
 
 {% block content %}
 
-<!-- PROFILE HEADER -->
+<!-- PROFILE HEADER (UNCHANGED) -->
 <div class="card shadow-sm mb-4"
      style="border-radius: 12px; border: none;
      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
@@ -13,8 +13,9 @@
 
         <div class="row align-items-center">
 
-            <!-- PROFILE PICTURE (LEFT) -->
+            <!-- PROFILE PICTURE -->
             <div class="col-md-3 text-start ps-0">
+
                 <div style="position: relative; display: inline-block; margin-left: -10px;">
 
                     {% if profile.profile_picture %}
@@ -30,52 +31,30 @@
                         </div>
                     {% endif %}
 
-                    <!-- optional camera button (you can link it later) -->
-                    {% if request.user == profile_user %}
-                    <button class="btn btn-light btn-sm"
-                            style="position:absolute;bottom:0;right:0;
-                            border-radius:50%;width:45px;height:45px;">
-                        <i class="fas fa-camera"></i>
-                    </button>
-                    {% endif %}
-
                 </div>
+
             </div>
 
-            <!-- PROFILE INFO -->
+            <!-- INFO -->
             <div class="col-md-9">
 
-                <h2 class="fw-bold mb-2">
-                    {{ profile_user.username }}
-                </h2>
+                <h2 class="fw-bold mb-2">{{ profile_user.username }}</h2>
 
                 <p class="mb-3" style="opacity:0.9;">
                     {{ profile.bio|default:"No bio yet..." }}
                 </p>
 
-                <!-- STATS -->
                 <div class="d-flex gap-4 mb-3">
                     <div><strong>{{ posts|length }}</strong> Posts</div>
                     <div><strong>{{ profile.followers.count }}</strong> Followers</div>
                     <div><strong>{{ profile_user.following.count }}</strong> Following</div>
                 </div>
 
-                <!-- ACTION BUTTONS -->
                 <div class="d-flex gap-2">
                     {% if request.user == profile_user %}
-
-                        <!-- ✅ FIXED: REAL PAGE LINK -->
                         <a href="{% url 'edit_profile' %}" class="btn btn-light">
                             Edit Profile
                         </a>
-
-                    {% else %}
-                        <button class="btn btn-light">
-                            Follow
-                        </button>
-                        <button class="btn btn-outline-light">
-                            Message
-                        </button>
                     {% endif %}
                 </div>
 
@@ -84,12 +63,15 @@
     </div>
 </div>
 
+
 <!-- POSTS -->
 <div class="container">
 
     {% for post in posts %}
-    <div class="card mb-3 shadow-sm">
 
+    <div class="card shadow-sm mb-4 post-card">
+
+        <!-- USER HEADER -->
         <div class="card-body d-flex justify-content-between align-items-center">
 
             <div class="d-flex gap-2 align-items-center">
@@ -103,16 +85,56 @@
                 </div>
             </div>
 
+            <!-- DELETE (ONLY OWNER) -->
+            {% if request.user == post.user %}
+            <a href="{% url 'delete_post' post.id %}"
+               class="text-danger text-decoration-none"
+               onclick="return confirm('Delete this post?');">
+                🗑️
+            </a>
+            {% endif %}
+
         </div>
 
+        <!-- IMAGE -->
         {% if post.image %}
-        <img src="{{ post.image.url }}"
-             class="w-100"
-             style="max-height:400px; object-fit:cover;">
+        <img src="{{ post.image.url }}" class="w-100 post-img">
         {% endif %}
 
+        <!-- CONTENT -->
         <div class="card-body pt-2">
-            <p class="mb-0">{{ post.content }}</p>
+            <p class="mb-2">{{ post.content }}</p>
+
+            <!-- LIKE -->
+            <a href="{% url 'like_post' post.id %}" class="text-decoration-none">
+                ❤️ {{ post.total_likes }}
+            </a>
+
+            <span class="ms-3">💬 {{ post.comments.count }}</span>
+        </div>
+
+        <!-- COMMENTS -->
+        <div class="p-3 border-top">
+
+            {% for comment in post.comments.all %}
+                <div class="mb-1">
+                    <strong>{{ comment.user.username }}</strong>
+                    {{ comment.text }}
+                </div>
+            {% empty %}
+                <small class="text-muted">No comments yet</small>
+            {% endfor %}
+
+            <!-- ADD COMMENT -->
+            <form method="POST" action="{% url 'add_comment' post.id %}" class="mt-2 d-flex gap-2">
+                {% csrf_token %}
+                <input type="text"
+                       name="text"
+                       class="form-control form-control-sm"
+                       placeholder="Write a comment...">
+                <button class="btn btn-sm btn-primary">Send</button>
+            </form>
+
         </div>
 
     </div>
