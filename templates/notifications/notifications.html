@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block title %}Notifications{% endblock %}
+
+{% block content %}
+
+<div class="row">
+
+    <!-- MAIN NOTIFICATIONS -->
+    <div class="col-md-8">
+
+        <h4 class="mb-3">Notifications</h4>
+
+        {% for notif in notifications %}
+
+        <div class="card mb-2 shadow-sm">
+            <div class="card-body d-flex justify-content-between">
+
+                <div>
+                    <strong>{{ notif.sender.username }}</strong>
+                    {{ notif.text }}
+                    <br>
+                    <small class="text-muted">{{ notif.created_at }}</small>
+                </div>
+
+            </div>
+        </div>
+
+        {% empty %}
+        <p class="text-muted">No notifications yet</p>
+        {% endfor %}
+
+    </div>
+</div>
+
+{% endblock %}

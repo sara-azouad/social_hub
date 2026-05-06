@@ -4,6 +4,7 @@ from .models import Post,Report
 from django.contrib.auth.models import User
 from .models import Post, Comment
 from django.contrib import messages
+from notifications.models import Notification
 @login_required
 def report_post(request, post_id):
     post = get_object_or_404(Post, id=post_id)
@@ -41,6 +42,15 @@ def add_comment(request, post_id):
                 user=request.user,
                 text=text
             )
+               # 🔔 notification
+            if post.user != request.user:
+                Notification.objects.create(
+                    sender=request.user,
+                    receiver=post.user,
+                    notif_type='comment',
+                    post=post,
+                    text=f"{request.user.username} commented on your post"
+                )
 
     return redirect(request.META.get('HTTP_REFERER', 'home'))
 @login_required
@@ -59,20 +69,45 @@ def like_post(request, post_id):
         post.likes.remove(request.user)   # unlike
     else:
         post.likes.add(request.user)      # like
+        # 🔔 notification
+        if post.user != request.user:
+            Notification.objects.create(
+                sender=request.user,
+                receiver=post.user,
+                notif_type='like',
+                post=post,
+                text=f"{request.user.username} liked your post"
+            )
 
     return redirect(request.META.get('HTTP_REFERER', 'home'))
+    
+from connections.models import Follow
 
-# HOME PAGE (ALL POSTS)
-def home(request):
-    posts = Post.objects.all().order_by('-created_at')
-    return render(request, "home.html", {"posts": posts})
-
-
-# FEED (same as home but protected)
 @login_required
 def feed(request):
-    posts = Post.objects.all().order_by('-created_at')
-    return render(request, 'connections/home.html', {'posts': posts})
+
+    # users current user is following
+    following_ids = Follow.objects.filter(
+        follower=request.user
+    ).values_list('following_id', flat=True)
+
+    # include yourself (Instagram style)
+    following_ids = list(following_ids)
+    following_ids.append(request.user.id)
+
+    # posts from followed users + yourself
+    posts = Post.objects.filter(
+        user__id__in=following_ids
+    ).order_by('-created_at')
+
+    # suggestions (for sidebar)
+    users = User.objects.exclude(id=request.user.id)
+
+    return render(request, 'connections/home.html', {
+        'posts': posts,
+        'users': users,
+        'following_ids': following_ids
+    })
 
 
 # CREATE POST

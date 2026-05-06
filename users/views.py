@@ -5,28 +5,7 @@ from django.contrib.auth.decorators import login_required
 
 from posts.models import Post
 from .models import UserProfile
-
-
-# ======================
-# EDIT PROFILE
-# ======================
-@login_required
-def edit_profile(request):
-    profile, created = UserProfile.objects.get_or_create(user=request.user)
-
-    if request.method == "POST":
-        profile.bio = request.POST.get("bio", "").strip()
-
-        if request.FILES.get("profile_picture"):
-            profile.profile_picture = request.FILES["profile_picture"]
-
-        profile.save()
-
-        return redirect('profile', username=request.user.username)
-
-    return render(request, "users/edit_profile.html", {
-        "profile": profile
-    })
+from connections.models import Follow
 
 
 # ======================
@@ -74,18 +53,87 @@ def register_view(request):
 # ======================
 # PROFILE
 # ======================
+from connections.models import Follow
+from connections.models import Follow
+from django.contrib.auth.models import User
+from django.shortcuts import get_object_or_404, render
+from django.contrib.auth.decorators import login_required
 @login_required
 def profile_view(request, username):
     user = get_object_or_404(User, username=username)
 
-    profile, created = UserProfile.objects.get_or_create(user=user)
-
+    profile = user.userprofile
     posts = Post.objects.filter(user=user).order_by('-created_at')
+
+    users = User.objects.exclude(id=request.user.id)
+
+    following_ids = Follow.objects.filter(
+        follower=request.user
+    ).values_list('following_id', flat=True)
+
+    is_following = Follow.objects.filter(
+        follower=request.user,
+        following=user
+    ).exists()
+
+    followers_count = Follow.objects.filter(following=user).count()
+    following_count = Follow.objects.filter(follower=user).count()
 
     return render(request, 'users/profile.html', {
         'profile_user': user,
         'profile': profile,
         'posts': posts,
+        'users': users,
+        'following_ids': list(following_ids),
+
+        # ✅ ADD THESE (IMPORTANT)
+        'is_following': is_following,
+        'followers_count': followers_count,
+        'following_count': following_count,
+
+        'is_own_profile': request.user == user
+    })
+
+# ======================
+# FOLLOW / UNFOLLOW
+# ======================
+@login_required
+def follow_unfollow(request, user_id):
+    target_user = get_object_or_404(User, id=user_id)
+
+    if request.user == target_user:
+        return redirect(request.META.get("HTTP_REFERER"))
+
+    follow, created = Follow.objects.get_or_create(
+        follower=request.user,
+        following=target_user
+    )
+
+    if not created:
+        follow.delete()
+
+    return redirect(request.META.get("HTTP_REFERER"))
+
+
+# ======================
+# EDIT PROFILE
+# ======================
+@login_required
+def edit_profile(request):
+    profile, created = UserProfile.objects.get_or_create(user=request.user)
+
+    if request.method == "POST":
+        profile.bio = request.POST.get("bio", "").strip()
+
+        if request.FILES.get("profile_picture"):
+            profile.profile_picture = request.FILES["profile_picture"]
+
+        profile.save()
+
+        return redirect('profile', username=request.user.username)
+
+    return render(request, "users/edit_profile.html", {
+        "profile": profile
     })
 
 

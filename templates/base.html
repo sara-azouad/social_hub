@@ -1,209 +1,215 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <title>{% block title %}SocialHub{% endblock %}</title>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <!-- Bootstrap + Icons -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"/>
+  <title>{% block title %}SocialHub{% endblock %}</title>
 
-    <style>
-      body { background: #f5f6f8; }
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
 
-      .topbar {
-        height: 60px;
-        background: white;
-        border-bottom: 1px solid #eee;
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        z-index: 1000;
-        display: flex;
-        align-items: center;
-        padding: 0 20px;
-      }
+  <style>
+    body {
+      background: #f5f6f8;
+    }
 
-      .logo {
-        font-weight: 700;
-        color: #4f46e5;
-        font-size: 20px;
-      }
+    .topbar {
+      height: 60px;
+      background: white;
+      border-bottom: 1px solid #eee;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      padding: 0 20px;
+    }
 
-      .top-icons {
-        margin-left: auto;
-        display: flex;
-        gap: 22px;
-        font-size: 18px;
-        color: #555;
-      }
+    .logo {
+      font-weight: 700;
+      color: #4f46e5;
+      font-size: 20px;
+    }
 
-      .sidebar {
-        width: 240px;
-        position: fixed;
-        top: 60px;
-        left: 0;
-        height: 100vh;
-        background: white;
-        border-right: 1px solid #eee;
-        padding: 15px;
-      }
+    .sidebar {
+      width: 240px;
+      position: fixed;
+      top: 60px;
+      left: 0;
+      height: 100vh;
+      background: white;
+      border-right: 1px solid #eee;
+      padding: 15px;
+    }
 
-      .sidebar a {
-        display: flex;
-        gap: 10px;
-        padding: 10px;
-        border-radius: 10px;
-        text-decoration: none;
-        color: #333;
-        margin-bottom: 5px;
-      }
+    .sidebar a {
+      display: flex;
+      gap: 10px;
+      padding: 10px;
+      border-radius: 10px;
+      text-decoration: none;
+      color: #333;
+    }
 
-      .sidebar a:hover {
-        background: #f3f4f6;
-        color: #4f46e5;
-      }
+    .sidebar a:hover {
+      background: #f3f4f6;
+      color: #4f46e5;
+    }
 
-      .main-content {
-        margin-top: 80px;
-        margin-left: 260px;
-        margin-right: 260px;
-        max-width: 650px;
-      }
+    .main-content {
+      margin-top: 80px;
+      margin-left: 260px;
+      margin-right: 260px;
+      max-width: 650px;
+    }
 
-      .avatar {
-        width: 40px;
-        height: 40px;
-        border-radius: 50%;
-        background: linear-gradient(135deg, #667eea, #764ba2);
-        color: white;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-weight: bold;
-      }
+    .rightbar {
+      width: 250px;
+      position: fixed;
+      top: 60px;
+      right: 0;
+      height: 100vh;
+      background: white;
+      border-left: 1px solid #eee;
+      padding: 15px;
+    }
 
-      .rightbar {
-        width: 250px;
-        position: fixed;
-        top: 60px;
-        right: 0;
-        height: 100vh;
-        background: white;
-        border-left: 1px solid #eee;
-        padding: 15px;
-      }
+    .suggest-user {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
 
-      .suggest-user {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 12px;
-      }
+    .avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+    }
+  </style>
+</head>
 
-      .logout-link {
-        display: flex;
-        gap: 10px;
-        padding: 10px;
-        border-radius: 10px;
-        text-decoration: none;
-        color: #dc3545;
-      }
+<body>
 
-      .logout-link:hover {
-        background: #f8d7da;
-      }
+  <!-- TOP BAR -->
+  <div class="topbar">
+    <div class="logo">SocialHub</div>
+  </div>
 
-      @media (max-width: 992px) {
-        .sidebar,
-        .rightbar {
-          display: none;
-        }
+  <!-- SIDEBAR -->
+  <div class="sidebar">
 
-        .main-content {
-          margin: 80px auto;
-          padding: 0 10px;
-        }
-      }
-    </style>
-  </head>
+    <a href="{% url 'home' %}">
+      <i class="fas fa-house"></i> Home
+    </a>
 
-  <body>
+    {% if request.user.is_authenticated %}
+    <a href="{% url 'profile' request.user.username %}">
+      <i class="fas fa-user"></i> Profile
+    </a>
+    {% endif %}
 
-    <!-- TOP BAR -->
-    <div class="topbar">
-      <div class="logo">SocialHub</div>
+    <a href="{% url 'notifications' %}">
+      <i class="fas fa-bell"></i> Notifications
+    </a>
 
-      <div class="top-icons">
-        <i class="fas fa-home"></i>
-        <i class="fas fa-bell"></i>
-        <i class="fas fa-envelope"></i>
-        <i class="fas fa-user-circle"></i>
+    <form method="POST" action="{% url 'logout' %}">
+      {% csrf_token %}
+      <a href="#" onclick="this.closest('form').submit(); return false;">
+        <i class="fas fa-right-from-bracket"></i> Logout
+      </a>
+    </form>
+
+  </div>
+
+  <!-- MAIN -->
+  <div class="main-content">
+    {% block content %}{% endblock %}
+  </div>
+
+  <!-- RIGHT BAR (SUGGESTIONS FIXED) -->
+  <div class="rightbar">
+
+    <h6 class="fw-bold">Suggestions</h6>
+
+    {% if users %}
+    {% for user in users|slice:":5" %}
+
+    {% if request.user != user %}
+
+    <div class="suggest-user">
+
+      <div class="d-flex gap-2 align-items-center">
+
+        <div class="avatar">
+          {{ user.username|first|upper }}
+        </div>
+
+        <strong>{{ user.username }}</strong>
+
       </div>
-    </div>
 
-    <!-- SIDEBAR -->
-    <div class="sidebar">
+      <button class="follow-btn btn btn-sm
+    {% if user.id in following_ids %}btn-danger{% else %}btn-primary{% endif %}" data-user="{{ user.id }}">
 
-      <a href="{% url 'home' %}">
-        <i class="fas fa-house"></i> Home
-      </a>
+        {% if user.id in following_ids %}
+        Following
+        {% else %}
+        Follow
+        {% endif %}
 
-      {% if request.user.is_authenticated %}
-      <a href="{% url 'profile' request.user.username %}">
-        <i class="fas fa-user"></i> Profile
-      </a>
-      {% endif %}
-
-      <a href="#">
-        <i class="fas fa-bell"></i> Notifications
-      </a>
-
-      <form method="POST" action="{% url 'logout' %}">
-        {% csrf_token %}
-        <a href="#" class="logout-link"
-           onclick="this.closest('form').submit(); return false;">
-          <i class="fas fa-right-from-bracket"></i> Logout
-        </a>
-      </form>
+      </button>
 
     </div>
 
-    <!-- MAIN CONTENT -->
-    <div class="main-content">
-      {% block content %}{% endblock %}
-    </div>
+    {% endif %}
 
-    <!-- RIGHT BAR -->
-    <div class="rightbar">
-      <h6 class="fw-bold">Suggestions</h6>
+    {% endfor %}
+    {% else %}
+    <p class="text-muted small">No suggestions</p>
+    {% endif %}
 
-      {% if users %}
-        {% for user in users|slice:":3" %}
-          <div class="suggest-user">
+  </div>
 
-            <div class="d-flex gap-2 align-items-center">
-              <div class="avatar">
-                {{ user.username|first|upper }}
-              </div>
+</body>
+<script>
+  document.addEventListener("click", function (e) {
 
-              <strong>{{ user.username }}</strong>
-            </div>
+    if (e.target.classList.contains("follow-btn")) {
 
-            <a href="{% url 'follow_user' user.id %}" class="btn btn-sm btn-primary">
-              Follow
-            </a>
+      let btn = e.target;
+      let userId = btn.dataset.user;
 
-          </div>
-        {% endfor %}
-      {% else %}
-        <p class="text-muted small">No suggestions</p>
-      {% endif %}
+      fetch(`/connections/follow/${userId}/`)
+        .then(res => res.json())
+        .then(data => {
 
-    </div>
+          if (data.status === "followed") {
+            btn.innerText = "Following";
+            btn.classList.remove("btn-primary");
+            btn.classList.add("btn-danger");
+          }
+          else {
+            btn.innerText = "Follow";
+            btn.classList.remove("btn-danger");
+            btn.classList.add("btn-primary");
+          }
 
-  </body>
+        });
+
+    }
+
+  });
+</script>
+
 </html>

@@ -16,11 +16,11 @@ def home_redirect(request):
 urlpatterns = [
     path('', home_redirect),
     path('admin/', admin.site.urls),
-
+   
     path('users/', include('users.urls')),
     path('posts/', include('posts.urls')),
     path('connections/', include('connections.urls')),
-
+    path('notifications/', include('notifications.urls')),
     path('logout/', auth_views.LogoutView.as_view(), name='logout'),
 ]
 

@@ -1,10 +1,42 @@
-from django.shortcuts import render
-from posts.models import Post
+from django.shortcuts import get_object_or_404
+from django.contrib.auth.models import User
+from django.http import JsonResponse
+from .models import Follow
+from notifications.models import Notification
 
-def home(request):
-    posts = Post.objects.all().order_by('-created_at')  # 👈 DATABASE QUERY HERE
+def follow_unfollow(request, user_id):
+    target_user = get_object_or_404(User, id=user_id)
 
-    return render(request, 'connections/home.html', {
-        'posts': posts
+    if request.user == target_user:
+        return JsonResponse({"error": "You cannot follow yourself"}, status=400)
+
+    relation = Follow.objects.filter(
+        follower=request.user,
+        following=target_user
+    )
+
+    if relation.exists():
+        relation.delete()
+        status = "unfollowed"
+
+    else:
+        Follow.objects.create(
+            follower=request.user,
+            following=target_user
+        )
+        status = "followed"
+
+        # 🔔 CREATE NOTIFICATION HERE (ONLY WHEN FOLLOWING)
+        Notification.objects.create(
+            sender=request.user,
+            receiver=target_user,
+            notif_type='follow',
+            text=f"{request.user.username} started following you"
+        )
+
+    followers_count = Follow.objects.filter(following=target_user).count()
+
+    return JsonResponse({
+        "status": status,
+        "followers_count": followers_count
     })
-    

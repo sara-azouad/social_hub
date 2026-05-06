@@ -4,9 +4,8 @@
 
 {% block content %}
 
-<!-- PROFILE HEADER (UNCHANGED) -->
-<div class="card shadow-sm mb-4"
-     style="border-radius: 12px; border: none;
+<!-- PROFILE HEADER -->
+<div class="card shadow-sm mb-4" style="border-radius: 12px; border: none;
      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
 
     <div class="card-body p-5 text-white">
@@ -16,22 +15,16 @@
             <!-- PROFILE PICTURE -->
             <div class="col-md-3 text-start ps-0">
 
-                <div style="position: relative; display: inline-block; margin-left: -10px;">
-
-                    {% if profile.profile_picture %}
-                        <img src="{{ profile.profile_picture.url }}"
-                             style="width:150px;height:150px;border-radius:50%;
-                             border:5px solid white;object-fit:cover;">
-                    {% else %}
-                        <div class="avatar"
-                             style="width:150px;height:150px;border:5px solid white;
-                             font-size:60px; display:flex; align-items:center;
-                             justify-content:center;">
-                            {{ profile_user.username|first|upper }}
-                        </div>
-                    {% endif %}
-
+                {% if profile.profile_picture %}
+                <img src="{{ profile.profile_picture.url }}" style="width:150px;height:150px;border-radius:50%;
+                     border:5px solid white;object-fit:cover;">
+                {% else %}
+                <div class="avatar" style="width:150px;height:150px;border:5px solid white;
+                         font-size:60px; display:flex; align-items:center;
+                         justify-content:center;">
+                    {{ profile_user.username|first|upper }}
                 </div>
+                {% endif %}
 
             </div>
 
@@ -45,24 +38,52 @@
                 </p>
 
                 <div class="d-flex gap-4 mb-3">
-                    <div><strong>{{ posts|length }}</strong> Posts</div>
-                    <div><strong>{{ profile.followers.count }}</strong> Followers</div>
-                    <div><strong>{{ profile_user.following.count }}</strong> Following</div>
+
+                    <div>
+                        <strong>{{ posts|length }}</strong> Posts
+                    </div>
+
+                    <div>
+                        <strong id="followers-count">{{ followers_count }}</strong>
+                        Followers
+                    </div>
+
+                    <div>
+                        <strong>{{ following_count }}</strong>
+                        Following
+                    </div>
+
                 </div>
 
+                <!-- FOLLOW / UNFOLLOW BUTTON (AJAX) -->
                 <div class="d-flex gap-2">
-                    {% if request.user == profile_user %}
-                        <a href="{% url 'edit_profile' %}" class="btn btn-light">
-                            Edit Profile
-                        </a>
+
+                    {% if request.user.is_authenticated and request.user != profile_user %}
+
+                    <button id="follow-btn" data-user-id="{{ profile_user.id }}"
+                        class="btn {% if is_following %}btn-secondary{% else %}btn-light{% endif %}">
+
+                        {% if is_following %}
+                        Following
+                        {% else %}
+                        Follow
+                        {% endif %}
+                    </button>
+
                     {% endif %}
+
+                    {% if request.user == profile_user %}
+                    <a href="{% url 'edit_profile' %}" class="btn btn-light">
+                        Edit Profile
+                    </a>
+                    {% endif %}
+
                 </div>
 
             </div>
         </div>
     </div>
 </div>
-
 
 <!-- POSTS -->
 <div class="container">
@@ -71,10 +92,10 @@
 
     <div class="card shadow-sm mb-4 post-card">
 
-        <!-- USER HEADER -->
         <div class="card-body d-flex justify-content-between align-items-center">
 
             <div class="d-flex gap-2 align-items-center">
+
                 <div class="avatar">
                     {{ profile_user.username|first|upper }}
                 </div>
@@ -83,56 +104,54 @@
                     <strong>{{ profile_user.username }}</strong><br>
                     <small class="text-muted">{{ post.created_at }}</small>
                 </div>
+
             </div>
 
-            <!-- DELETE (ONLY OWNER) -->
             {% if request.user == post.user %}
-            <a href="{% url 'delete_post' post.id %}"
-               class="text-danger text-decoration-none"
-               onclick="return confirm('Delete this post?');">
+            <a href="{% url 'delete_post' post.id %}" class="text-danger text-decoration-none"
+                onclick="return confirm('Delete this post?');">
                 🗑️
             </a>
             {% endif %}
 
         </div>
 
-        <!-- IMAGE -->
         {% if post.image %}
         <img src="{{ post.image.url }}" class="w-100 post-img">
         {% endif %}
 
-        <!-- CONTENT -->
         <div class="card-body pt-2">
+
             <p class="mb-2">{{ post.content }}</p>
 
-            <!-- LIKE -->
             <a href="{% url 'like_post' post.id %}" class="text-decoration-none">
                 ❤️ {{ post.total_likes }}
             </a>
 
             <span class="ms-3">💬 {{ post.comments.count }}</span>
+
         </div>
 
-        <!-- COMMENTS -->
         <div class="p-3 border-top">
 
             {% for comment in post.comments.all %}
-                <div class="mb-1">
-                    <strong>{{ comment.user.username }}</strong>
-                    {{ comment.text }}
-                </div>
+            <div class="mb-1">
+                <strong>{{ comment.user.username }}</strong>
+                {{ comment.text }}
+            </div>
             {% empty %}
-                <small class="text-muted">No comments yet</small>
+            <small class="text-muted">No comments yet</small>
             {% endfor %}
 
-            <!-- ADD COMMENT -->
             <form method="POST" action="{% url 'add_comment' post.id %}" class="mt-2 d-flex gap-2">
+
                 {% csrf_token %}
-                <input type="text"
-                       name="text"
-                       class="form-control form-control-sm"
-                       placeholder="Write a comment...">
-                <button class="btn btn-sm btn-primary">Send</button>
+                <input type="text" name="text" class="form-control form-control-sm" placeholder="Write a comment...">
+
+                <button class="btn btn-sm btn-primary">
+                    Send
+                </button>
+
             </form>
 
         </div>
@@ -140,9 +159,45 @@
     </div>
 
     {% empty %}
-        <p class="text-center text-muted">No posts yet.</p>
+    <p class="text-center text-muted">No posts yet.</p>
     {% endfor %}
 
 </div>
+
+<!-- =========================
+     AJAX FOLLOW SYSTEM
+========================= -->
+<script>
+    document.getElementById("follow-btn")?.addEventListener("click", function () {
+
+        const userId = this.getAttribute("data-user-id");
+
+        fetch(`/connections/follow/${userId}/`, {
+            method: "GET",
+            headers: {
+                "X-Requested-With": "XMLHttpRequest"
+            }
+        })
+            .then(res => res.json())
+            .then(data => {
+
+                const btn = document.getElementById("follow-btn");
+                const count = document.getElementById("followers-count");
+
+                if (data.status === "followed") {
+                    btn.innerText = "Following";
+                    btn.classList.remove("btn-light");
+                    btn.classList.add("btn-secondary");
+                } else {
+                    btn.innerText = "Follow";
+                    btn.classList.remove("btn-secondary");
+                    btn.classList.add("btn-light");
+                }
+
+                count.innerText = data.followers_count;
+            });
+
+    });
+</script>
 
 {% endblock %}

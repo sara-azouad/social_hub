@@ -2,6 +2,5 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-     path('', views.home, name='home'), 
-     path('home/', views.home, name='home'),
+     path('follow/<int:user_id>/', views.follow_unfollow, name='follow_unfollow'),
 ]
