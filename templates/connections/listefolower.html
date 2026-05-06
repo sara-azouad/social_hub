@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container mt-4">
+
+    <h3 class="mb-4">
+        Followers of {{ profile_user.username }}
+    </h3>
+
+    {% for relation in followers %}
+
+    <div class="card shadow-sm p-3 mb-2 d-flex flex-row align-items-center justify-content-between">
+
+        <!-- USER INFO -->
+        <div class="d-flex align-items-center gap-2">
+
+            <div class="avatar">
+                {{ relation.follower.username|first|upper }}
+            </div>
+
+            <a href="{% url 'profile' relation.follower.username %}" class="text-decoration-none fw-bold">
+
+                {{ relation.follower.username }}
+
+            </a>
+
+        </div>
+
+    </div>
+
+    {% empty %}
+
+    <p class="text-muted">No followers yet.</p>
+
+    {% endfor %}
+
+</div>
+
+{% endblock %}

@@ -43,19 +43,29 @@
                         <strong>{{ posts|length }}</strong> Posts
                     </div>
 
+                    <!-- FOLLOWERS (CLICKABLE PAGE) -->
                     <div>
-                        <strong id="followers-count">{{ followers_count }}</strong>
-                        Followers
+
+                        <a href="{% url 'followers_list' profile_user.username %}"
+                            class="text-white text-decoration-none">
+
+                            <strong id="followers-count">{{ followers_count }}</strong>
+                            Followers
+                        </a>
                     </div>
 
+                    <!-- FOLLOWING (optional later page) -->
                     <div>
-                        <strong>{{ following_count }}</strong>
-                        Following
+                        <a href="{% url 'following_list' profile_user.username %}"
+                            class="text-white text-decoration-none">
+                            <strong>{{ following_count }}</strong>
+                            Following
+                        </a>
                     </div>
 
                 </div>
 
-                <!-- FOLLOW / UNFOLLOW BUTTON (AJAX) -->
+                <!-- FOLLOW BUTTON -->
                 <div class="d-flex gap-2">
 
                     {% if request.user.is_authenticated and request.user != profile_user %}
@@ -85,6 +95,7 @@
     </div>
 </div>
 
+
 <!-- POSTS -->
 <div class="container">
 
@@ -108,10 +119,16 @@
             </div>
 
             {% if request.user == post.user %}
-            <a href="{% url 'delete_post' post.id %}" class="text-danger text-decoration-none"
-                onclick="return confirm('Delete this post?');">
-                🗑️
-            </a>
+            <div>
+                <a href="{% url 'edit_post' post.id %}" class="text-primary me-2">
+                    Edit
+                </a>
+
+                <a href="{% url 'delete_post' post.id %}" class="text-danger"
+                    onclick="return confirm('Delete this post?');">
+                    Delete
+                </a>
+            </div>
             {% endif %}
 
         </div>
@@ -135,10 +152,23 @@
         <div class="p-3 border-top">
 
             {% for comment in post.comments.all %}
-            <div class="mb-1">
-                <strong>{{ comment.user.username }}</strong>
-                {{ comment.text }}
+
+            <div class="d-flex justify-content-between align-items-center mb-1">
+
+                <div>
+                    <strong>{{ comment.user.username }}</strong>
+                    {{ comment.text }}
+                </div>
+
+                {% if comment.user == request.user %}
+                <a href="{% url 'delete_comment' comment.id %}" class="btn btn-sm btn-danger"
+                    onclick="return confirm('Delete this comment?');">
+                    Delete Comment
+                </a>
+                {% endif %}
+
             </div>
+
             {% empty %}
             <small class="text-muted">No comments yet</small>
             {% endfor %}
@@ -164,9 +194,7 @@
 
 </div>
 
-<!-- =========================
-     AJAX FOLLOW SYSTEM
-========================= -->
+<!-- FOLLOW AJAX -->
 <script>
     document.getElementById("follow-btn")?.addEventListener("click", function () {
 

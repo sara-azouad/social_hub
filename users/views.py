@@ -143,3 +143,16 @@ def edit_profile(request):
 def logout_view(request):
     logout(request)
     return redirect('login')
+from django.shortcuts import render, get_object_or_404
+from django.contrib.auth.models import User
+from connections.models import Follow
+
+def followers_list(request, username):
+    user = get_object_or_404(User, username=username)
+
+    followers = Follow.objects.filter(following=user)
+
+    return render(request, "connections/listefolower.html", {
+        "profile_user": user,
+        "followers": followers
+    })

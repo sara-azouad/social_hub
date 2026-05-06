@@ -40,3 +40,34 @@ def follow_unfollow(request, user_id):
         "status": status,
         "followers_count": followers_count
     })
+from django.contrib.auth.models import User
+from django.shortcuts import render, get_object_or_404
+from .models import Follow
+
+
+def followers_list(request, username):
+
+    user = get_object_or_404(User, username=username)
+
+    followers = Follow.objects.filter(
+        following=user
+    )
+
+    return render(request, 'connections/listefolower.html', {
+        'profile_user': user,
+        'followers': followers
+    })
+
+
+def following_list(request, username):
+
+    user = get_object_or_404(User, username=username)
+
+    following = Follow.objects.filter(
+        follower=user
+    )
+
+    return render(request, 'connections/listefolowing.html', {
+        'profile_user': user,
+        'following': following
+    })

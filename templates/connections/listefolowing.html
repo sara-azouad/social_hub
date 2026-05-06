@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block title %}Following - SocialHub{% endblock %}
+
+{% block content %}
+
+<div class="container mt-4">
+
+    <h3 class="mb-4">
+        {{ profile_user.username }} is following
+    </h3>
+
+    {% for relation in following %}
+
+    <div class="card p-3 mb-2">
+
+        <a href="{% url 'profile' relation.following.username %}" class="text-decoration-none">
+
+            {{ relation.following.username }}
+
+        </a>
+
+    </div>
+
+    {% empty %}
+
+    <p class="text-muted">Not following anyone yet.</p>
+
+    {% endfor %}
+
+</div>
+
+{% endblock %}

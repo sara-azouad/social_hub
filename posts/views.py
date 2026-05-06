@@ -144,3 +144,45 @@ def profile_view(request, username):
         'posts': posts,
         'is_own_profile': request.user == user
     })
+from django.shortcuts import get_object_or_404, redirect
+from .models import Comment
+
+@login_required
+def delete_comment(request, comment_id):
+
+    comment = get_object_or_404(Comment, id=comment_id)
+
+    # security: only owner can delete
+    if comment.user == request.user:
+        comment.delete()
+
+    return redirect(request.META.get('HTTP_REFERER', 'home'))
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render, redirect, get_object_or_404
+from .models import Post
+
+
+@login_required
+def edit_post(request, post_id):
+
+    post = get_object_or_404(Post, id=post_id)
+
+    # security
+    if request.user != post.user:
+        return redirect('home')
+
+    if request.method == "POST":
+
+        post.content = request.POST.get('content')
+
+        # if user uploads new image
+        if request.FILES.get('image'):
+            post.image = request.FILES.get('image')
+
+        post.save()
+
+        return redirect('profile', username=request.user.username)
+
+    return render(request, 'posts/edit_post.html', {
+        'post': post
+    })
