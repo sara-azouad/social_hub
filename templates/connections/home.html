@@ -2,132 +2,111 @@
 {% block content %}
 
 <!-- CREATE POST -->
-<div class="card shadow-sm mb-4 p-3">
-  <form method="POST" action="{% url 'create_post' %}" enctype="multipart/form-data">
-    {% csrf_token %}
-
-    <textarea name="content" class="form-control mb-2" placeholder="Write your post..." required></textarea>
-
-    <input type="file" name="image" class="form-control mb-2" />
-
-    <button type="submit" class="btn btn-primary">
-      Create a Post
-    </button>
-  </form>
+<div class="card mb-4">
+  <div class="card-body">
+    <form method="POST" action="{% url 'create_post' %}" enctype="multipart/form-data">
+      {% csrf_token %}
+      <div class="d-flex gap-2 mb-3 align-items-start">
+        <div class="avatar" style="margin-top:4px;">
+          {{ request.user.username|first|upper }}
+        </div>
+        <textarea name="content" class="form-control" placeholder="What's on your mind?" required style="min-height:70px;"></textarea>
+      </div>
+      <div class="d-flex justify-content-between align-items-center">
+        <label for="post-img-input" style="cursor:pointer;color:#6b7280;font-size:0.87rem;">
+          <i class="fas fa-image me-1" style="color:#00e5ff;"></i> Add photo
+          <input id="post-img-input" type="file" name="image" style="display:none;">
+        </label>
+        <button type="submit" class="btn btn-primary" style="padding:8px 24px;">
+          Post
+        </button>
+      </div>
+    </form>
+  </div>
 </div>
 
-<!-- POSTS -->
+<!-- POSTS FEED -->
 {% for post in posts %}
-
 <div class="card shadow-sm mb-4">
 
   <!-- HEADER -->
   <div class="card-body d-flex justify-content-between align-items-center">
     <div class="d-flex gap-2 align-items-center">
-      <div class="avatar">
-        {{ post.user.username|first|upper }}
-      </div>
-
+      <div class="avatar">{{ post.user.username|first|upper }}</div>
       <div>
-        <h6 class="mb-0">{{ post.user.username }}</h6>
-        <small class="text-muted">{{ post.created_at }}</small>
+        <a href="{% url 'profile' post.user.username %}"
+           style="font-weight:600;font-size:0.92rem;color:#e8eaf0;text-decoration:none;">
+          {{ post.user.username }}
+        </a><br>
+        <small style="color:#6b7280;">{{ post.created_at }}</small>
       </div>
     </div>
   </div>
 
   <!-- IMAGE -->
   {% if post.image %}
-  <img src="{{ post.image.url }}" class="w-100" />
+  <img src="{{ post.image.url }}" class="w-100 post-img">
   {% endif %}
 
   <!-- CONTENT -->
-  <div class="card-body">
-    <p>{{ post.content }}</p>
+  <div class="card-body pt-2">
+    <p style="margin:0;line-height:1.6;">{{ post.content }}</p>
   </div>
 
   <!-- ACTIONS -->
-  <div class="card-footer bg-white d-flex justify-content-around align-items-center">
-
-    <!-- LIKE -->
-    <a href="{% url 'like_post' post.id %}" class="text-decoration-none">
-      {% if user in post.likes.all %}
-      ❤️ Unlike
-      {% else %}
-      🤍 Like
-      {% endif %}
-      ({{ post.total_likes }})
+  <div class="card-footer d-flex justify-content-around align-items-center">
+    <a href="{% url 'like_post' post.id %}" style="color:{% if user in post.likes.all %}#ff4d6d{% else %}#6b7280{% endif %};">
+      {% if user in post.likes.all %}❤️{% else %}🤍{% endif %} {{ post.total_likes }}
     </a>
-
-    <!-- COMMENTS COUNT -->
     <span>💬 {{ post.comments.count }}</span>
-
-    <!-- REPORT -->
-    <form method="POST" action="{% url 'report_post' post.id %}" style="display:inline;">
+    <form method="POST" action="{% url 'report_post' post.id %}" style="display:inline;margin:0;">
       {% csrf_token %}
-      <button type="submit" onclick="return confirm('Are you sure you want to report this post?');"
-        style="border:none; background:none; color:red;">
+      <button type="submit" onclick="return confirm('Report this post?');"
+        style="border:none;background:none;color:#ff4d6d;cursor:pointer;font-size:0.87rem;">
         🚩 Report
       </button>
     </form>
-
-    <!-- EDIT (ONLY OWNER) -->
     {% if user == post.user %}
-    <a href="{% url 'edit_post' post.id %}" class="text-primary text-decoration-none">
-      Edit
+    <a href="{% url 'edit_post' post.id %}" style="color:#00e5ff;font-size:0.85rem;text-decoration:none;">
+      <i class="fas fa-pen"></i> Edit
     </a>
-
-    <!-- DELETE -->
-    <a href="{% url 'delete_post' post.id %}" class="text-danger text-decoration-none"
-      onclick="return confirm('Delete this post?');">
-      Delete
+    <a href="{% url 'delete_post' post.id %}" style="color:#ff4d6d;font-size:0.85rem;text-decoration:none;"
+       onclick="return confirm('Delete this post?');">
+      <i class="fas fa-trash"></i>
     </a>
     {% endif %}
-
   </div>
 
   <!-- COMMENTS -->
-  <div class="p-3">
-
+  <div class="p-3" style="border-top:none;">
     {% for comment in post.comments.all %}
-
     <div class="d-flex justify-content-between align-items-center mb-2">
-
-      <div>
-        <strong>{{ comment.user.username }}</strong>
-        {{ comment.text }}
+      <div style="font-size:0.87rem;">
+        <strong style="color:#e8eaf0;">{{ comment.user.username }}</strong>
+        <span style="color:#9ca3af;margin-left:6px;">{{ comment.text }}</span>
       </div>
-
       {% if comment.user == request.user %}
       <a href="{% url 'delete_comment' comment.id %}" class="btn btn-sm btn-danger"
-        onclick="return confirm('Delete this comment?');">
-        Delete
-      </a>
+         onclick="return confirm('Delete?');">×</a>
       {% endif %}
-
     </div>
-
     {% empty %}
-    <p class="text-muted">No comments yet</p>
+    <small style="color:#6b7280;">No comments yet</small>
     {% endfor %}
 
-    <!-- ADD COMMENT -->
-    <form method="POST" action="{% url 'add_comment' post.id %}">
+    <form method="POST" action="{% url 'add_comment' post.id %}" class="mt-3 d-flex gap-2">
       {% csrf_token %}
-
-      <input type="text" name="text" class="form-control form-control-sm mt-2" placeholder="Write a comment..."
-        required>
-
-      <button class="btn btn-sm btn-primary mt-2">
-        Comment
-      </button>
+      <input type="text" name="text" class="form-control form-control-sm" placeholder="Write a comment..." required>
+      <button class="btn btn-sm btn-primary" type="submit">Send</button>
     </form>
-
   </div>
 
 </div>
-
 {% empty %}
-<p class="text-center text-muted">No posts yet 🚀</p>
+<div style="text-align:center;color:#6b7280;padding:60px 0;">
+  <i class="fas fa-rocket" style="font-size:2rem;margin-bottom:12px;display:block;color:#00e5ff;"></i>
+  No posts yet — be the first!
+</div>
 {% endfor %}
 
 {% endblock %}

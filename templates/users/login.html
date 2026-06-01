@@ -4,224 +4,295 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>SocialHub - Login</title>
-
+<title>SocialHub — Login</title>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 
 <style>
+:root {
+  --bg: #0a0c10;
+  --surface: #111318;
+  --surface2: #181c24;
+  --border: rgba(255,255,255,0.07);
+  --accent: #00e5ff;
+  --accent2: #7c3aed;
+  --text: #e8eaf0;
+  --muted: #6b7280;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
 
 body {
-    font-family: 'Inter', sans-serif;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    min-height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 20px;
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg);
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  position: relative;
+  overflow: hidden;
 }
 
-.login-container {
-    width: 100%;
-    max-width: 1000px;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    background: white;
-    border-radius: 16px;
-    overflow: hidden;
-    box-shadow: 0 20px 50px rgba(0,0,0,0.15);
+/* Ambient glow background */
+body::before {
+  content: '';
+  position: fixed;
+  top: -20%;
+  left: -10%;
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, rgba(124,58,237,0.15) 0%, transparent 70%);
+  pointer-events: none;
+}
+body::after {
+  content: '';
+  position: fixed;
+  bottom: -20%;
+  right: -10%;
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, rgba(0,229,255,0.1) 0%, transparent 70%);
+  pointer-events: none;
 }
 
-.brand-section {
-    background: linear-gradient(135deg, #667eea, #764ba2);
-    color: white;
-    padding: 60px 40px;
-    text-align: center;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
+.login-wrapper {
+  width: 100%;
+  max-width: 960px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 30px 80px rgba(0,0,0,0.6);
+  position: relative;
+  z-index: 1;
+}
+
+/* LEFT brand panel */
+.brand-panel {
+  background: linear-gradient(145deg, #0f0b1e 0%, #1a0a2e 50%, #0d1520 100%);
+  padding: 60px 44px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.brand-panel::before {
+  content: '';
+  position: absolute;
+  top: 30%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 320px;
+  height: 320px;
+  background: radial-gradient(circle, rgba(0,229,255,0.12) 0%, transparent 70%);
+  pointer-events: none;
 }
 
 .brand-logo {
-    font-size: 42px;
-    font-weight: 700;
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: 36px;
+  background: linear-gradient(90deg, var(--accent), var(--accent2));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 10px;
 }
 
-.brand-section h2 {
-    font-size: 26px;
-    font-weight: 700;
-    margin-top: 20px;
+.brand-tagline {
+  color: rgba(255,255,255,0.5);
+  font-size: 0.95rem;
+  margin-bottom: 48px;
 }
 
 .feature-item {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-top: 15px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 20px;
 }
 
 .feature-icon {
-    width: 38px;
-    height: 38px;
-    border-radius: 50%;
-    background: rgba(255,255,255,0.2);
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  background: rgba(0,229,255,0.1);
+  border: 1px solid rgba(0,229,255,0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--accent);
+  font-size: 0.9rem;
+  flex-shrink: 0;
 }
 
-.form-section {
-    padding: 60px 40px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
+.feature-text {
+  color: rgba(255,255,255,0.65);
+  font-size: 0.9rem;
 }
 
-.form-header h1 {
-    font-size: 28px;
-    font-weight: 700;
+/* RIGHT form panel */
+.form-panel {
+  padding: 60px 48px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background: var(--surface2);
+}
+
+.form-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 26px;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 4px;
+}
+
+.form-subtitle {
+  color: var(--muted);
+  font-size: 0.9rem;
+  margin-bottom: 32px;
 }
 
 .form-control {
-    height: 44px;
-    border-radius: 10px;
-    border: 1px solid #e5e5e5;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.09);
+  border-radius: 10px;
+  color: var(--text);
+  padding: 12px 16px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.95rem;
+  height: 48px;
+  transition: border-color 0.2s, box-shadow 0.2s;
 }
-
+.form-control::placeholder { color: var(--muted); }
 .form-control:focus {
-    border-color: #667eea;
-    box-shadow: 0 0 0 3px rgba(102,126,234,0.15);
+  background: rgba(0,229,255,0.04);
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(0,229,255,0.12);
+  color: var(--text);
+  outline: none;
 }
 
-.btn-login {
-    height: 44px;
-    background: linear-gradient(135deg, #667eea, #764ba2);
-    border: none;
-    border-radius: 10px;
-    color: white;
-    font-weight: 600;
+.btn-auth {
+  height: 48px;
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  border: none;
+  border-radius: 10px;
+  color: #000;
+  font-weight: 700;
+  font-family: 'Syne', sans-serif;
+  font-size: 0.95rem;
+  letter-spacing: 0.5px;
+  transition: opacity 0.2s, transform 0.2s;
+  cursor: pointer;
 }
+.btn-auth:hover { opacity: 0.88; transform: translateY(-1px); }
 
-.btn-login:hover {
-    transform: translateY(-2px);
+.auth-switch {
+  color: var(--muted);
+  font-size: 0.88rem;
+  text-align: center;
+  margin-top: 20px;
 }
-
-/* small fix */
 .auth-link {
-    cursor: pointer;
-    color: #667eea;
+  color: var(--accent);
+  cursor: pointer;
+  font-weight: 600;
+  text-decoration: none;
 }
+.auth-link:hover { opacity: 0.8; }
 
+@media (max-width: 700px) {
+  .login-wrapper { grid-template-columns: 1fr; }
+  .brand-panel { display: none; }
+}
 </style>
 </head>
 
 <body>
 
-<div class="login-container">
+<div class="login-wrapper">
 
-<!-- LEFT -->
-<div class="brand-section">
-
-    <div class="brand-logo">
-        <i class="fas fa-globe"></i> SocialHub
-    </div>
-
-    <h2>Connect with the World</h2>
+  <!-- LEFT -->
+  <div class="brand-panel">
+    <div class="brand-logo"><i class="fas fa-bolt"></i> SocialHub</div>
+    <p class="brand-tagline">Your world, amplified.</p>
 
     <div class="feature-item">
-        <div class="feature-icon"><i class="fas fa-users"></i></div>
-        Meet new friends
+      <div class="feature-icon"><i class="fas fa-users"></i></div>
+      <span class="feature-text">Connect with people worldwide</span>
     </div>
-
     <div class="feature-item">
-        <div class="feature-icon"><i class="fas fa-image"></i></div>
-        Share moments
+      <div class="feature-icon"><i class="fas fa-image"></i></div>
+      <span class="feature-text">Share your best moments</span>
     </div>
-
     <div class="feature-item">
-        <div class="feature-icon"><i class="fas fa-heart"></i></div>
-        Build connections
+      <div class="feature-icon"><i class="fas fa-heart"></i></div>
+      <span class="feature-text">Build meaningful connections</span>
     </div>
-
-</div>
-
-<!-- RIGHT -->
-<div class="form-section">
-
-<!-- ================= LOGIN ================= -->
-<div id="login-box">
-
-    <div class="form-header mb-4">
-        <h1>Welcome Back</h1>
-        <p class="text-muted">Login to continue</p>
+    <div class="feature-item">
+      <div class="feature-icon"><i class="fas fa-bell"></i></div>
+      <span class="feature-text">Stay updated in real time</span>
     </div>
+  </div>
 
-    <form method="POST" action="{% url 'login' %}">
+  <!-- RIGHT -->
+  <div class="form-panel">
+
+    <!-- LOGIN -->
+    <div id="login-box">
+      <div class="form-title">Welcome back</div>
+      <p class="form-subtitle">Sign in to your account</p>
+
+      <form method="POST" action="{% url 'login' %}">
         {% csrf_token %}
-
         <input type="text" name="username" class="form-control mb-3" placeholder="Username">
+        <input type="password" name="password" class="form-control mb-4" placeholder="Password">
+        <button class="btn-auth w-100" type="submit">Sign In</button>
+      </form>
 
-        <input type="password" name="password" class="form-control mb-3" placeholder="Password">
-
-        <button class="btn btn-login w-100">Login</button>
-    </form>
-
-    <div class="text-center mt-3">
-        <small>
-            Don't have an account?
-            <span class="auth-link" onclick="showRegister()">Register</span>
-        </small>
+      <div class="auth-switch">
+        No account? <span class="auth-link" onclick="showRegister()">Create one</span>
+      </div>
     </div>
 
-</div>
+    <!-- REGISTER -->
+    <div id="register-box" style="display:none;">
+      <div class="form-title">Create account</div>
+      <p class="form-subtitle">Join SocialHub today</p>
 
-<!-- ================= REGISTER ================= -->
-<div id="register-box" style="display:none;">
-
-    <div class="form-header mb-4">
-        <h1>Create Account</h1>
-        <p class="text-muted">Sign up to start sharing</p>
-    </div>
-
-    <form method="POST" action="{% url 'register' %}">
+      <form method="POST" action="{% url 'register' %}">
         {% csrf_token %}
-
         <input type="text" name="username" class="form-control mb-3" placeholder="Username">
-
         <input type="password" name="password" class="form-control mb-3" placeholder="Password">
+        <input type="password" name="confirm_password" class="form-control mb-4" placeholder="Confirm Password">
+        <button class="btn-auth w-100" type="submit">Create Account</button>
+      </form>
 
-        <input type="password" name="confirm_password" class="form-control mb-3" placeholder="Confirm Password">
-
-        <button class="btn btn-login w-100">Register</button>
-    </form>
-
-    <div class="text-center mt-3">
-        <small>
-            Already have an account?
-            <span class="auth-link" onclick="showLogin()">Login</span>
-        </small>
+      <div class="auth-switch">
+        Already have an account? <span class="auth-link" onclick="showLogin()">Sign in</span>
+      </div>
     </div>
 
-</div>
-
-</div>
-
+  </div>
 </div>
 
 <script>
 function showRegister() {
-    document.getElementById("login-box").style.display = "none";
-    document.getElementById("register-box").style.display = "block";
+  document.getElementById("login-box").style.display = "none";
+  document.getElementById("register-box").style.display = "block";
 }
-
 function showLogin() {
-    document.getElementById("register-box").style.display = "none";
-    document.getElementById("login-box").style.display = "block";
+  document.getElementById("register-box").style.display = "none";
+  document.getElementById("login-box").style.display = "block";
 }
 </script>
-
 </body>
 </html>

@@ -1,71 +1,21 @@
 {% extends "base.html" %}
-
-{% block title %}Edit Profile - SocialHub{% endblock %}
-
+{% block title %}Edit Profile — SocialHub{% endblock %}
 {% block content %}
 
-<div class="container mt-4">
-
-    <div class="card shadow-sm p-4"
-         style="max-width: 600px; margin:auto; border-radius: 12px;">
-
-        <h3 class="mb-4">Edit Profile</h3>
-
-        <form method="POST" enctype="multipart/form-data">
-            {% csrf_token %}
-
-            <!-- CURRENT PICTURE -->
-            <div class="text-center mb-3">
-
-                {% if profile.profile_picture %}
-                    <img src="{{ profile.profile_picture.url }}"
-                         style="width:120px;height:120px;border-radius:50%;
-                         object-fit:cover;border:3px solid #ddd;">
-                {% else %}
-                    <div class="avatar mx-auto"
-                         style="width:120px;height:120px;border-radius:50%;
-                         display:flex;align-items:center;justify-content:center;
-                         background:#6c5ce7;color:white;font-size:40px;">
-                        {{ profile.user.username|first|upper }}
-                    </div>
-                {% endif %}
-
-            </div>
-
-            <!-- BIO -->
-            <div class="mb-3">
-                <label class="form-label">Bio</label>
-                <textarea name="bio"
-                          class="form-control"
-                          rows="4"
-                          style="border-radius:10px;">{{ profile.bio }}</textarea>
-            </div>
-
-            <!-- PROFILE PICTURE -->
-            <div class="mb-3">
-                <label class="form-label">Change Profile Picture</label>
-                <input type="file"
-                       name="profile_picture"
-                       class="form-control"
-                       style="border-radius:10px;">
-            </div>
-
-            <!-- BUTTONS -->
-            <div class="d-flex gap-2">
-                <button class="btn btn-success px-4">
-                    Save Changes
-                </button>
-
-                <a href="{% url 'profile' profile.user.username %}"
-                   class="btn btn-outline-secondary">
-                    Cancel
-                </a>
-            </div>
-
-        </form>
-
+<div class="card p-4">
+  <h5 style="margin-bottom:24px;"><i class="fas fa-user-pen me-2" style="color:#00e5ff;"></i>Edit Profile</h5>
+  <form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="mb-3">
+      <label style="color:#9ca3af;font-size:0.85rem;margin-bottom:6px;display:block;">Bio</label>
+      <textarea name="bio" class="form-control" placeholder="Tell the world about yourself..." rows="3">{{ profile.bio }}</textarea>
     </div>
-
+    <div class="mb-4">
+      <label style="color:#9ca3af;font-size:0.85rem;margin-bottom:6px;display:block;">Profile Picture</label>
+      <input type="file" name="profile_picture" class="form-control">
+    </div>
+    <button type="submit" class="btn btn-primary" style="padding:10px 32px;">Save Changes</button>
+  </form>
 </div>
 
 {% endblock %}
